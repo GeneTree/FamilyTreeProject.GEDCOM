@@ -65,24 +65,32 @@ namespace FamilyTreeProject.GEDCOM
             return String.Format("@{0}{1}@", prefix, id);
         }
 
-        private static Regex _idRegex = new Regex(@"[a-zA-Z]+(\d*)");
+        private static Regex _idNumberRegex = new Regex(@"[a-zA-Z]+(\d*)");
+
+        /// <summary>
+        /// Returns the number part of a XRefId as a string.
+        /// Returns empty string if the number part cannot be parsed out of idString.
+        /// Always returns non-null.
+        /// </summary>
+        /// <param name="idString"></param>
+        /// <returns></returns>
         public static string GetId(string idString)
         {
-            int id = -1;
+            string id = string.Empty;
             if (!String.IsNullOrEmpty(idString))
             {
-                Match idMatch = _idRegex.Match(idString);
+                Match idMatch = _idNumberRegex.Match(idString);
                 if (idMatch.Success)
                 {
                     int parsedInt = 0;
                     if (Int32.TryParse(idMatch.Groups[1].Value, out parsedInt))
                     {
-                        id = parsedInt;
+                        id = parsedInt.ToString();
                     }                    
                 }
             }
 
-            return id.ToString();
+            return id;
         }
 
         public static GEDCOMTag GetTag(string tag)
